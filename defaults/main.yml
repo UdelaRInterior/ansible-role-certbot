@@ -43,14 +43,16 @@ certbot_create_command: >-
   --cert-name {{ cert_item_name }}
   -d {{ cert_item.domains | join(',') }}
   {{ '--expand' if certbot_expand else '' }}
-  {{ '--pre-hook /etc/letsencrypt/renewal-hooks/pre/stop_services'
-    if certbot_create_standalone_stop_services and certbot_create_method == 'standalone'
+  {{ '--pre-hook /etc/letsencrypt/renewal-hooks/pre/pre_hook'
+    if (certbot_create_standalone_stop_services or certbot_pre_hook_template != "stop_services.j2") and certbot_create_method == 'standalone'
   else '' }}
-  {{ '--post-hook /etc/letsencrypt/renewal-hooks/post/start_services'
-    if certbot_create_standalone_stop_services and certbot_create_method == 'standalone'
+  {{ '--post-hook /etc/letsencrypt/renewal-hooks/post/post_hook'
+    if (certbot_create_standalone_stop_services or certbot_post_hook_template != "start_services.j2") and certbot_create_method == 'standalone'
   else '' }}
   {{ "--deploy-hook '" ~ cert_item.deploy_hook ~ "'"
     if 'deploy_hook' in cert_item
+  else '--deploy-hook /etc/letsencrypt/renewal-hooks/deploy/deploy_certificate'
+   if certbot_deploy_hook_template
   else '' }}
 
 certbot_create_standalone_stop_services:
@@ -69,5 +71,7 @@ certbot_keep_updated: true
 # Where to put Certbot when installing from source.
 certbot_dir: /opt/certbot
 
+# Your own templates for pre, post and deploy hooks
 certbot_pre_hook_template: stop_services.j2
 certbot_post_hook_template: start_services.j2
+#certbot_delpoy_hook_template:

@@ -18,28 +18,40 @@
   with_items:
     - pre
     - post
+    - deploy
 
-- name: Create pre hook to stop services.
+- name: Create a pre hook
   template:
     src: "{{ certbot_pre_hook_template }}"
-    dest: /etc/letsencrypt/renewal-hooks/pre/stop_services
+    dest: /etc/letsencrypt/renewal-hooks/pre/pre_hook
     owner: root
     group: root
     mode: 0750
-  when:
-    - certbot_create_standalone_stop_services is defined
-    - certbot_create_standalone_stop_services is truthy
+  when: >
+    (certbot_create_standalone_stop_services is defined and certbot_create_standalone_stop_services is truthy)
+    or certbot_pre_hook_template != "stop_services.j2"
 
-- name: Create post hook to start services.
+- name: Create a post hook
   template:
     src: "{{ certbot_post_hook_template }}"
-    dest: /etc/letsencrypt/renewal-hooks/post/start_services
+    dest: /etc/letsencrypt/renewal-hooks/post/post_hook
+    owner: root
+    group: root
+    mode: 0750
+  when: >
+    (certbot_create_standalone_stop_services is defined and certbot_create_standalone_stop_services is truthy)
+    or certbot_post_hook_template != "start_services.j2"
+
+- name: Create a deploy hook
+  template:
+    src: "{{ certbot_deploy_hook_template }}"
+    dest: /etc/letsencrypt/renewal-hooks/deploy/deploy_certificate
     owner: root
     group: root
     mode: 0750
   when:
-    - certbot_create_standalone_stop_services is defined
-    - certbot_create_standalone_stop_services is truthy
+    - certbot_deploy_hook_template is defined
+    - certbot_deploy_hook_template != ""
 
 - name: Check if domains have changed
   block:
