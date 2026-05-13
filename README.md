@@ -74,6 +74,18 @@ Services that should be stopped while `certbot` runs it's own standalone server 
 
 These services will only be stopped the first time a new cert is generated.
 
+    certbot_pre_hook_template: stop_services.j2
+
+Path to a Jinja template to create a pre hook that will run before the certificate is generated. If you modify its default (`stop_services.j2`), you will also need to create your own template and place it in the specified path. This can be useful if you need to stop services in a different way than the existing template does.
+
+    certbot_post_hook_template: start_services.j2
+
+Path to a Jinja template to create a post hook that will run after the certificate is generated. If you modify its default (`start_services.j2`), you will also need to create your own template and place it in the specified path. This can be useful if you need to start services in a different way than the existing template does.
+
+    certbot_deploy_hook_template: 
+    
+Path to a jinja template to create a deploy hook that will run after the certificate has been generated.
+
 ### Snap Installation
 
 Beginning in December 2020, the Certbot maintainers decided to recommend installing Certbot from Snap rather than maintain scripts like `certbot-auto`.
