@@ -13,19 +13,13 @@
 - import_tasks: install-from-source.yml
   when: certbot_install_method == 'source'
 
-- include_tasks: create-cert-standalone.yml
-  with_items: "{{ certbot_certs }}"
-  when:
-    - certbot_create_if_missing
-    - certbot_create_method == 'standalone'
-  loop_control:
-    loop_var: cert_item
+- import_tasks: setup-dns-rfc2136.yml
+  when: certbot_create_method == 'dns-rfc2136'
 
-- include_tasks: create-cert-webroot.yml
+
+- include_tasks: create-cert.yml
   with_items: "{{ certbot_certs }}"
-  when:
-    - certbot_create_if_missing
-    - certbot_create_method == 'webroot'
+  when: certbot_create_if_missing
   loop_control:
     loop_var: cert_item
 

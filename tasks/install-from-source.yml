@@ -1,4 +1,11 @@
 ---
+- name: Ensure python3-venv is installed.
+  package:
+    name:
+      - python3
+      - python3-venv
+    state: present
+
 - name: Clone Certbot into configured directory.
   git:
     repo: "{{ certbot_repo }}"
@@ -7,11 +14,29 @@
     update: "{{ certbot_keep_updated }}"
     force: true
 
+- name: Create Certbot virtualenv and install from source.
+  pip:
+    name:
+      - "{{ certbot_dir }}/acme"
+      - "{{ certbot_dir }}/certbot"
+    virtualenv: "{{ certbot_dir }}/venv"
+    virtualenv_command: python3 -m venv
+    state: present
+
+- name: Install certbot dns-rfc2136 plugin from source.
+  pip:
+    name: "{{ certbot_dir }}/certbot-dns-rfc2136"
+    virtualenv: "{{ certbot_dir }}/venv"
+    virtualenv_command: python3 -m venv
+    state: present
+  when: certbot_create_method == 'dns-rfc2136'
+
+- name: Symlink certbot into place.
+  file:
+    src: "{{ certbot_dir }}/venv/bin/certbot"
+    dest: /usr/bin/certbot
+    state: link
+
 - name: Set Certbot script variable.
   set_fact:
-    certbot_script: "{{ certbot_dir }}/certbot-auto"
-
-- name: Ensure certbot-auto is executable.
-  file:
-    path: "{{ certbot_script }}"
-    mode: 0755
+    certbot_script: /usr/bin/certbot

@@ -1,0 +1,16 @@
+---
+- name: Ensure Let's Encrypt directory exists.
+  file:
+    path: "{{ certbot_dns_rfc2136_credentials_file | dirname }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Deploy RFC 2136 credentials file.
+  template:
+    src: dns_rfc2136_credentials.j2
+    dest: "{{ certbot_dns_rfc2136_credentials_file }}"
+    owner: root
+    group: root
+    mode: "0600"

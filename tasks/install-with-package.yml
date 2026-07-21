@@ -4,6 +4,12 @@
     name: "{{ certbot_package }}"
     state: present
 
+- name: Install certbot dns-rfc2136 plugin (package).
+  package:
+    name: "{{ certbot_dns_rfc2136_package }}"
+    state: present
+  when: certbot_create_method == 'dns-rfc2136'
+
 - name: Set Certbot script variable.
   set_fact:
     certbot_script: "{{ certbot_package }}"

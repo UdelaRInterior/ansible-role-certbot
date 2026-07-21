@@ -36,6 +36,16 @@
     state: link
   ignore_errors: "{{ ansible_check_mode }}"
 
+- name: Trust certbot snap plugins.
+  command: snap set certbot trust-plugin-with-root=ok
+  changed_when: false
+  when: certbot_create_method == 'dns-rfc2136'
+
+- name: Install certbot dns-rfc2136 plugin (snap).
+  snap:
+    name: certbot-dns-rfc2136
+  when: certbot_create_method == 'dns-rfc2136'
+
 - name: Set Certbot script variable.
   set_fact:
     certbot_script: /usr/bin/certbot
