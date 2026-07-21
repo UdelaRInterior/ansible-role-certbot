@@ -90,14 +90,13 @@ When using the `webroot` creation method, a `webroot` item has to be provided fo
 
 This role supports generating certificates using the DNS-01 challenge via the `certbot-dns-rfc2136` plugin. This is particularly useful for wildcard certificates, which require DNS validation.
 
-The plugin is installed automatically alongside Certbot when `certbot_dns_rfc2136_enabled` is set to `true`, using the appropriate mechanism for each install method.
+The plugin is installed automatically alongside Certbot when `certbot_create_method` is set to `dns-rfc2136`, using the appropriate mechanism for each install method.
 
 To enable, set the following variables:
 
 ```yaml
 certbot_create_method: dns-rfc2136
 certbot_create_if_missing: true
-certbot_dns_rfc2136_enabled: true
 ```
 
 Configure the RFC 2136 credentials (TSIG key parameters for your DNS server):

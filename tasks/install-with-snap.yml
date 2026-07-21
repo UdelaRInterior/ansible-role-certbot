@@ -39,12 +39,12 @@
 - name: Trust certbot snap plugins.
   command: snap set certbot trust-plugin-with-root=ok
   changed_when: false
-  when: certbot_dns_rfc2136_enabled
+  when: certbot_create_method == 'dns-rfc2136'
 
 - name: Install certbot dns-rfc2136 plugin (snap).
   snap:
     name: certbot-dns-rfc2136
-  when: certbot_dns_rfc2136_enabled
+  when: certbot_create_method == 'dns-rfc2136'
 
 - name: Set Certbot script variable.
   set_fact:

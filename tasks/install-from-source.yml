@@ -29,7 +29,7 @@
     virtualenv: "{{ certbot_dir }}/venv"
     virtualenv_command: python3 -m venv
     state: present
-  when: certbot_dns_rfc2136_enabled
+  when: certbot_create_method == 'dns-rfc2136'
 
 - name: Symlink certbot into place.
   file:

@@ -76,9 +76,6 @@ certbot_keep_updated: true
 certbot_dir: /opt/certbot
 
 # DNS-01 challenge via RFC 2136 (certbot-dns-rfc2136 plugin).
-# Set to true to install the plugin and deploy the credentials file.
-certbot_dns_rfc2136_enabled: false
-
 # Path to the RFC 2136 credentials file.
 certbot_dns_rfc2136_credentials_file: /etc/letsencrypt/dns_rfc2136_credentials.txt
 
