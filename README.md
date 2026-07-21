@@ -36,7 +36,7 @@ Set `certbot_create_if_missing` to `yes` or `True` to let this role generate cer
 
     certbot_create_method: standalone
 
-Set the method used for generating certs with the `certbot_create_method` variable — current allowed values are: `standalone` or `webroot`.
+Set the method used for generating certs with the `certbot_create_method` variable — current allowed values are: `standalone`, `webroot`, or `dns-rfc2136`.
 
     certbot_testmode: false
 
@@ -85,6 +85,47 @@ This install method is currently experimental and may or may not work across all
 #### Webroot Certificate Generation
 
 When using the `webroot` creation method, a `webroot` item has to be provided for every `certbot_certs` item, specifying which directory to use for the authentication. Also, make sure your webserver correctly delivers contents from this directory.
+
+#### DNS-01 Certificate Generation (RFC 2136)
+
+This role supports generating certificates using the DNS-01 challenge via the `certbot-dns-rfc2136` plugin. This is particularly useful for wildcard certificates, which require DNS validation.
+
+The plugin is installed automatically alongside Certbot when `certbot_dns_rfc2136_enabled` is set to `true`, using the appropriate mechanism for each install method.
+
+To enable, set the following variables:
+
+```yaml
+certbot_create_method: dns-rfc2136
+certbot_create_if_missing: true
+certbot_dns_rfc2136_enabled: true
+```
+
+Configure the RFC 2136 credentials (TSIG key parameters for your DNS server):
+
+```yaml
+# Target DNS server (IPv4 or IPv6 address, not a hostname).
+certbot_dns_rfc2136_server: "192.0.2.1"
+# Target DNS port.
+certbot_dns_rfc2136_port: 53
+# TSIG key name.
+certbot_dns_rfc2136_name: "keyname."
+# TSIG key secret.
+certbot_dns_rfc2136_secret: "your-tsig-secret-key-here"
+# TSIG key algorithm (HMAC-MD5 | HMAC-SHA1 | HMAC-SHA256 | HMAC-SHA384 | HMAC-SHA512).
+certbot_dns_rfc2136_algorithm: "HMAC-SHA512"
+# TSIG sign SOA query (optional, default: false).
+certbot_dns_rfc2136_sign_query: false
+```
+
+Optional configuration:
+
+```yaml
+# Path to the credentials file.
+certbot_dns_rfc2136_credentials_file: /etc/letsencrypt/dns_rfc2136_credentials.txt
+
+# Seconds to wait for DNS propagation before asking the ACME server to verify.
+certbot_dns_rfc2136_propagation_seconds: 60
+```
 
 ### Source Installation from Git
 

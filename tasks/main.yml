@@ -24,11 +24,11 @@
   loop_control:
     loop_var: cert_item
 
-- include_tasks: create-cert-webroot.yml
+- include_tasks: create-cert.yml
   with_items: "{{ certbot_certs }}"
   when:
     - certbot_create_if_missing
-    - certbot_create_method == 'webroot'
+    - certbot_create_method in ['webroot', 'dns-rfc2136']
   loop_control:
     loop_var: cert_item
 

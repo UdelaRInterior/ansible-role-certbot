@@ -12,6 +12,7 @@
   file:
     path: "{{ cert_item.webroot | default(certbot_webroot) }}"
     state: directory
+  when: certbot_create_method == 'webroot'
 
 - name: Check if domains have changed
   block:

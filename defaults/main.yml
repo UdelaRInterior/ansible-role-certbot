@@ -32,6 +32,12 @@ certbot_certs: []
 
 certbot_create_command: >-
   {{ certbot_script }} certonly --{{ certbot_create_method  }}
+  {{ '--dns-rfc2136-credentials ' ~ certbot_dns_rfc2136_credentials_file
+    if certbot_create_method == 'dns-rfc2136'
+  else '' }}
+  {{ '--dns-rfc2136-propagation-seconds ' ~ certbot_dns_rfc2136_propagation_seconds
+    if certbot_create_method == 'dns-rfc2136'
+  else '' }}
   {{ '--hsts' if certbot_hsts else '' }}
   {{ '--test-cert' if certbot_testmode else '' }}
   --noninteractive --agree-tos
