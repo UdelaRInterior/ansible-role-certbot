@@ -13,6 +13,9 @@
 - import_tasks: install-from-source.yml
   when: certbot_install_method == 'source'
 
+- import_tasks: setup-dns-rfc2136.yml
+  when: certbot_dns_rfc2136_enabled
+
 - include_tasks: create-cert-standalone.yml
   with_items: "{{ certbot_certs }}"
   when:
